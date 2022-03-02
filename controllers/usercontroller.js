@@ -86,6 +86,22 @@ router.post("/register", async (req, res) => {
 
      const { email, username, password, isAdmin } = req.body
 
+    if (isAdmin == true) {
+        let adminUser = await models.UserModel.findAll({
+            where: {username: username, isAdmin:true}
+        })
+        if (adminUser.length > 0) {
+            res.json({
+                message: 'already admin on account'
+            })
+            return
+        }
+    }
+
+    
+
+
+
      try {
         await models.UserModel.create({
             email,
