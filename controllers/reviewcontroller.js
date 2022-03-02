@@ -33,14 +33,14 @@ try {
 // review update
 
 router.put("/:reviewId", validateJWT, async (req, res) => {
-    const {reviewId, bookId} = req.params
+    const {reviewId} = req.params
 
     let query 
     if(req.user.isAdmin == true) {
         query = {
             where: {
                 id: reviewId,
-                bookId: bookId
+
             }
         };
     } else {
@@ -62,7 +62,7 @@ router.put("/:reviewId", validateJWT, async (req, res) => {
       try {
           await models.ReviewModel.update(
               { title, review, rating},
-              { where: { id: reviewId, userId: req.user.id}} //looking to update where the id in our database matches the id in our endpoint // return the effect that rose
+              query //looking to update where the id in our database matches the id in our endpoint // return the effect that rose
           )
           .then((result) => {
               res.status(200).json({
@@ -132,12 +132,31 @@ try {
  router.delete("/:reviewId", validateJWT, async (req, res) =>{
     const {reviewId} = req.params 
     
+
+    let query 
+    if(req.user.isAdmin == true) {
+        query = {
+            where: {
+                id: reviewId,
+
+            }
+        };
+    } else {
+        query = {
+            where: {
+                id: reviewId,
+                userId: req.user.id
+            }
+        }
+    }
+
+
     try { 
       
 
-      await models.ReviewModel.destroy({
-          where: {id: reviewId, userId: req.user.id}
-      })
+      await models.ReviewModel.destroy(
+          query
+      )
 
       res.status(200).json({
           message: "Review successfully deleted"

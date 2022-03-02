@@ -70,6 +70,8 @@ router.post('/', validateJWT, async (req, res) => {
 
 router.put("/:bookId", validateJWT, async (req, res) => {
     const {bookId} = req.params
+
+
     const {
         title,
         author,
@@ -80,10 +82,30 @@ router.put("/:bookId", validateJWT, async (req, res) => {
 
     } = req.body
 
+    let query 
+    if(req.user.isAdmin == true) {
+        query = {
+            where: {
+                id: bookId,
+
+            }
+        };
+    } else {
+        query = {
+            where: {
+                id: bookId,
+                userId: req.user.id
+            }
+        }
+    }
+
+
+
     try {
         await models.BookModel.update(
             {title, author, genre, summary, image, list},
-            {where: {id: bookId, userId: req.user.id} }
+            // {where: {id: bookId, userId: req.user.id} }
+            query
         )
         .then((result) => {
             res.status(200).json({
@@ -167,11 +189,30 @@ router.get("/list/:list", async (req, res) => {
 router.delete("/:bookId", validateJWT, async (req, res) =>{
     const {bookId} = req.params;
 
+    let query 
+    if(req.user.isAdmin == true) {
+        query = {
+            where: {
+                id: bookId,
+
+            }
+        };
+    } else {
+        query = {
+            where: {
+                id: bookId,
+                userId: req.user.id
+            }
+        }
+    }
+
+
+
     try {
 
-      await models.BookModel.destroy({
-          where: {id: bookId, userId: req.user.id}
-      })
+      await models.BookModel.destroy(
+          query
+      )
 
       res.status(200).json({
           message: "Book successfully deleted"
