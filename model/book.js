@@ -33,9 +33,9 @@ const Book = db.define("book", {
     list: {
         type: DataTypes.STRING,
     },
-    // owner_id: {
-    //     type: DataTypes.INTEGER
-    // }
+    username: {
+        type: DataTypes.STRING
+    }
 
     
 });

@@ -17,7 +17,8 @@ router.post('/', validateJWT, async (req, res) => {
             summary: summary,
             image: image,
             list: list,
-            userId: req.user.id
+            userId: req.user.id,
+            username: req.user.username
         })
         .then(
             book => {
@@ -184,6 +185,24 @@ router.get("/list/:list", async (req, res) => {
         res.status(500).json({ error: err})
     }
 });
+
+//Get book by book Id 
+router.get("/book/:bookId", validateJWT, async (req, res) => {
+    const {bookId} = req.params;
+    
+    try {
+        const book = await models.BookModel.findAll({
+            where: {
+                id: bookId
+            }
+        })
+        res.status(200).json(book);
+    } catch (err) {
+        res.status(500).json({error: err})
+    }
+    
+    })
+
 
 // Delete book
 router.delete("/:bookId", validateJWT, async (req, res) =>{

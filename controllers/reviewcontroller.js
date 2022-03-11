@@ -11,7 +11,8 @@ try {
         review: review,
         rating: rating, 
         bookId: bookId, 
-        userId: req.user.id
+        userId: req.user.id,
+        username: req.user.username
     })
     .then(
         review => {

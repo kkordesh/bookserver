@@ -22,6 +22,10 @@ const Review = db.define("review", {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    username: {
+        type: DataTypes.STRING, 
+    
+    }
     // owner_id: {
     //     type: DataTypes.INTEGER
     // }
